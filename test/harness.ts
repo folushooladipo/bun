@@ -1012,3 +1012,27 @@ declare module "bun:test" {
   interface Matchers<T> extends BunHarnessTestMatchers {}
   interface AsymmetricMatchers extends BunHarnessTestMatchers {}
 }
+
+let networkInterfaces: any;
+
+function isIP(type: "IPv4" | "IPv6") {
+  if (!networkInterfaces) {
+    networkInterfaces = os.networkInterfaces();
+  }
+  for (const networkInterface of Object.values(networkInterfaces)) {
+    for (const { family } of networkInterface as any[]) {
+      if (family === type) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+export function isIPv6() {
+  return isIP("IPv6");
+}
+
+export function isIPv4() {
+  return isIP("IPv4");
+}
